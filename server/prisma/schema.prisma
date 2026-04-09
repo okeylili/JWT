@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+  MODERATOR
+}
+
+model User {
+  id                  String         @id @default(cuid())
+  email               String         @unique
+  name                String
+  passwordHash        String
+  role                Role           @default(USER)
+  failedLoginAttempts Int            @default(0)
+  lockUntil           DateTime?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  refreshTokens       RefreshToken[]
+  auditLogs           AuditLog[]     @relation("AuditActor")
+}
+
+model RefreshToken {
+  id            String   @id @default(cuid())
+  tokenHash     String   @unique
+  family        String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+  revokedAt     DateTime?
+  replacedById  String?
+  isReused      Boolean  @default(false)
+  userAgent     String?
+  ipAddress     String?
+}
+
+model BlacklistedToken {
+  id        String   @id @default(cuid())
+  jti       String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String
+  details     String?
+  ipAddress   String?
+  actorUserId String?
+  actor       User?    @relation("AuditActor", fields: [actorUserId], references: [id])
+  createdAt   DateTime @default(now())
+}
