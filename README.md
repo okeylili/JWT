@@ -29,27 +29,7 @@ Production-ready full-stack auth and authorization app with JWT rotation, RBAC +
     /context
 ```
 
-## Setup (Docker)
-1. Copy `server/.env.example` to `server/.env` and set strong secrets.
-2. Run:
-   - `docker-compose up --build`
-3. Open:
-   - Client: `http://localhost:5173`
-   - API: `http://localhost:4000`
-   - Swagger: `http://localhost:4000/api/docs`
 
-## Environment Variables (`server/.env`)
-- `NODE_ENV`
-- `PORT`
-- `CLIENT_URL`
-- `DATABASE_URL`
-- `REDIS_URL`
-- `JWT_ACCESS_SECRET`
-- `JWT_REFRESH_SECRET`
-- `ACCESS_TOKEN_TTL`
-- `REFRESH_TOKEN_TTL_DAYS`
-- `BCRYPT_ROUNDS`
-- `CSRF_COOKIE_NAME`
 
 ## Prisma Database Schema (Core)
 - `User`: identity, credentials, role, lockout state
